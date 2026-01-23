@@ -37,6 +37,10 @@ import { IndexedEvent, IndexingState } from './entities';
     // Register indexer module
     IndexerModule,
   ],
+import { BlockchainModule } from './blockchain/blockchain.module';
+
+@Module({
+  imports: [BlockchainModule],
   controllers: [AppController],
   providers: [AppService, IndexerConfigService],
 })
