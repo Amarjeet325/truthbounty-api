@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BlockchainModule } from './blockchain/blockchain.module';
+import { DisputeModule } from './dispute/dispute.module';
 import { IdentityModule } from './identity/identity.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -21,6 +22,7 @@ import { PrismaModule } from './prisma/prisma.module';
       synchronize: true, // For development; use migrations in production
     }),
     BlockchainModule,
+    DisputeModule,
     IdentityModule,
     PrismaModule,
   ],
