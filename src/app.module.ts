@@ -4,13 +4,11 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
 import { BlockchainModule } from './blockchain/blockchain.module';
 import { DisputeModule } from './dispute/dispute.module';
 import { IdentityModule } from './identity/identity.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { AggregationModule } from './aggregation/aggregation.module'; // if added
-
+import { RedisModule } from './redis/redis.module';
 import throttlerConfig from './config/throttler.config';
 import { WalletThrottlerGuard } from './common/guards/wallet-throttler.guard';
 import { SybilResistanceModule } from './sybil-resistance/sybil-resistance.module';
@@ -152,7 +150,7 @@ async function createThrottlerStorage(configService: ConfigService): Promise<any
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-
+      envFilePath: ['.env.local', '.env'],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -162,8 +160,10 @@ async function createThrottlerStorage(configService: ConfigService): Promise<any
       password: process.env.DB_PASSWORD || 'password',
       database: process.env.DB_NAME || 'truthbounty',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: process.env.DATABASE_SYNCHRONIZE === 'true', // Use env var for safety
+      logging: process.env.DATABASE_LOGGING === 'true',
     }),
+    RedisModule,
     BlockchainModule,
     DisputeModule,
     IdentityModule,
